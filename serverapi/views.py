@@ -54,6 +54,7 @@ def qqscorefree(request):
         'nuniv':res.nuniv,
         'nsp':res.nsp,
         'total':res.total,
+        'descvip': str(res.total) + ' 条信息'
     }, safe=False)
 
 def getuseropenid(code):
@@ -154,6 +155,14 @@ def payme(request):
     data = Cpayme.generate_bill() 
     print(data)
     return JsonResponse({'data': data})
+
+def getscorelist(request):
+    # provinces = ["河北", "山东", "北京", "天津", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "上海", "江苏", "浙江", "安徽", "福建", "江西", "河南", "湖北", "湖南", "广东", "广西", "海南", "重庆", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆"],
+    provinces = ["河北", "山东", "北京", "山西", "内蒙古", "吉林", "黑龙江", "江苏", "福建", "河南", "湖南", "广西", "重庆", "贵州", "青海", "宁夏"],
+    # pkeys = [37, 13, 11, 12, 14, 15, 21, 22, 23, 31, 32, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46,50, 51, 52, 53, 54, 61, 62, 63, 64, 65],
+    pkeys = [37, 13, 11, 14, 15, 22, 23, 32, 35, 41, 43, 45, 50, 52, 63, 64],
+    return JsonResponse({'provinces': provinces, 'pkeys': pkeys})
+
 def payed(request):
     msg = request.body.decode('utf-8')
     xmlmsg = xmltodict.parse(msg)
@@ -184,3 +193,9 @@ def payed(request):
         return HttpResponse("""<xml><return_code><![CDATA[SUCCESS]]></return_code>
                             <return_msg><![CDATA[OK]]></return_msg></xml>""",
                             content_type='text/xml', status=200)
+
+def descpay(request):
+    return JsonResponse({'data': '邀请五位好友试用'})
+
+def tableheader(request):
+    return JsonResponse({'col1': '风险', 'col2': '专业', 'col3': '2017', 'col4': '2018(名次)', 'updatecol1': 1})
