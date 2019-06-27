@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^payed$', views.payed, name='payed'),
     url(r'^descpay$', views.descpay, name='descpay'),
     url(r'^tableheader$', views.tableheader, name='tableheader'),
+    url(r'^qqscorefreePerfor$', views.qqscorefreePerfor, name='qqscorefreePerfor'),
 ]
 #本步骤目前做这个可以写，可以不写，不过之后要是对student做具体操作（比如：增删改等）必须写，方便管理项目。
 #如果不打算写，可以直接做完第1步，直接第2步

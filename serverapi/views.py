@@ -41,7 +41,8 @@ def qqscorefree(request):
     if (int(request.GET['isvip']) == 1):
         res = QQscoreModel.objects.get(score=request.GET['score'], local_type_id=request.GET['local_type_id'], province_id=request.GET['province_id'])
     else:
-        res = QQscore10Model.objects.get(score=request.GET['score'], local_type_id=request.GET['local_type_id'], province_id=request.GET['province_id'])
+        # res = QQscore10Model.objects.get(score=request.GET['score'], local_type_id=request.GET['local_type_id'], province_id=request.GET['province_id'])
+        res = QQscoreModel.objects.get(score=request.GET['score'], local_type_id=request.GET['local_type_id'], province_id=request.GET['province_id'])
     # res = QQscore10Model.objects.get(score=520, local_type_id=1)
 #    print(res.data)
     
@@ -51,6 +52,34 @@ def qqscorefree(request):
         'counts': res.counts, 
         'srank':res.srank, 
         'data':res.data,
+        'nuniv':res.nuniv,
+        'nsp':res.nsp,
+        'total':res.total,
+        'descvip': str(res.total) + ' 条信息'
+    }, safe=False)
+
+def qqscorefreePerfor(request):
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Performances')
+    print(request.META.get("HTTP_COOKIE"))
+    print('@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+    print(request.GET['score'], request.GET['local_type_id'], request.GET['province_id'])
+    res = {}
+#    res = QQscoreModel.objects.get(score=request.GET['score'], local_type_id=request.GET['local_type_id'], province_id=request.GET['province_id'])
+    if (int(request.GET['isvip']) == 1):
+        res = QQscoreModel.objects.get(score=request.GET['score'], local_type_id=request.GET['local_type_id'], province_id=request.GET['province_id'])
+    else:
+        # res = QQscore10Model.objects.get(score=request.GET['score'], local_type_id=request.GET['local_type_id'], province_id=request.GET['province_id'])
+        res = QQscoreModel.objects.get(score=request.GET['score'], local_type_id=request.GET['local_type_id'], province_id=request.GET['province_id'])
+    # res = QQscore10Model.objects.get(score=520, local_type_id=1)
+#    print(res.data)
+    
+    return JsonResponse({
+        'score':res.score, 
+        'local_type_id':res.local_type_id, 
+        'counts': res.counts, 
+        'srank':res.srank, 
+        # 'data':json.loads(json.dumps(eval(res.data))),
+        'data':eval(res.data),
         'nuniv':res.nuniv,
         'nsp':res.nsp,
         'total':res.total,
@@ -133,7 +162,8 @@ def regiuserinfo(request):
     isvip = storeuser(openid, userinfo)
     if len(repostF) > 8:
         isvip = storeuserF(repostF, userinfo, openid)
-    return JsonResponse({'cc': isvip})
+    # return JsonResponse({'cc': isvip})
+    return JsonResponse({'cc': 1})
 
 def getPostUsers(request):
     openid = request.GET['openid']
@@ -145,11 +175,12 @@ def getPostUsers(request):
             break
         ans.append(json.loads(item['info']))
         npcount = npcount + 1
-    return JsonResponse({'users': ans, 'fee': '1'})
+    return JsonResponse({'users': ans, 'fee': '990'})
 
 def payme(request):
     openid = request.GET['openid']
-    fee = request.GET['fee']
+    # fee = request.GET['fee']
+    fee = '990'
     params = {'fee': fee, 'openid': openid}
     Cpayme = PayMe(openid, fee)
     data = Cpayme.generate_bill() 
@@ -158,9 +189,11 @@ def payme(request):
 
 def getscorelist(request):
     # provinces = ["河北", "山东", "北京", "天津", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "上海", "江苏", "浙江", "安徽", "福建", "江西", "河南", "湖北", "湖南", "广东", "广西", "海南", "重庆", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆"],
-    provinces = ["河北", "山东", "北京", "山西", "内蒙古", "吉林", "黑龙江", "江苏", "福建", "河南", "湖南", "广西", "重庆", "贵州", "青海", "宁夏"],
-    # pkeys = [37, 13, 11, 12, 14, 15, 21, 22, 23, 31, 32, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46,50, 51, 52, 53, 54, 61, 62, 63, 64, 65],
-    pkeys = [37, 13, 11, 14, 15, 22, 23, 32, 35, 41, 43, 45, 50, 52, 63, 64],
+    # provinces = ["河北", "山东", "北京", "山西", "内蒙古", "吉林", "黑龙江", "江苏", "福建", "河南", "湖南", "广西", "重庆", "贵州", "青海", "宁夏"],
+    provinces = ["河北", "山东", "北京", "天津", "山西", "内蒙古", "辽宁", "吉林", "黑龙江", "江苏", "安徽", "福建", "江西", "河南", "湖北", "湖南", "广东", "广西", "海南", "重庆", "四川", "贵州", "云南", "西藏", "陕西", "甘肃", "青海", "宁夏", "新疆"],
+    # pkeys = [13, 37, 11, 12, 14, 15, 21, 22, 23, 31, 32, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46,50, 51, 52, 53, 54, 61, 62, 63, 64, 65],
+    pkeys = [13, 37, 11, 12, 14, 15, 21, 22, 23, 32, 34, 35, 36, 41, 42, 43, 44, 45, 46,50, 51, 52, 53, 54, 61, 62, 63, 64, 65],
+    # pkeys = [13, 37, 11, 14, 15, 22, 23, 32, 35, 41, 43, 45, 50, 52, 63, 64],
     return JsonResponse({'provinces': provinces, 'pkeys': pkeys})
 
 def payed(request):
@@ -195,7 +228,7 @@ def payed(request):
                             content_type='text/xml', status=200)
 
 def descpay(request):
-    return JsonResponse({'data': '邀请五位好友试用'})
+    return JsonResponse({'data': '邀请五位好友登录试用'})
 
 def tableheader(request):
     return JsonResponse({'col1': '风险', 'col2': '专业', 'col3': '2017', 'col4': '2018(名次)', 'updatecol1': 1})
