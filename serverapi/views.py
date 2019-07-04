@@ -27,6 +27,8 @@ from serverapi.obtain_openid_demo import OpenidUtils
 
 import xmltodict
 
+from datetime import datetime
+
 def index(request):#定义一个函数，第一个参数必须是request
     print('lalala')
     return HttpResponse("Hello, world. Hello，python.")#返回HttpResonse对象，最终将这行字符显示在页面上
@@ -107,6 +109,7 @@ def logincode(request):
     resopenid = getuseropenid(request.GET['code'])
     print(resopenid)
     print('--------------------')
+    print(datetime.now())
     return JsonResponse({'cc': resopenid})
 
 def storeuser(openid, userinfo):
@@ -140,7 +143,7 @@ def storeuserF(repostFid, userinfo, openid):
             return 0
         ans.append(item)
         npcount = npcount + 1
-    if (npcount >= 5):
+    if (npcount >= 6):
         UserRepostStr.objects.filter(openid=repostFid).update(isvip=1)
     #userinfo.openid = openid
     ans.append({'openid': openid, 'info': userinfo})
@@ -162,8 +165,8 @@ def regiuserinfo(request):
     isvip = storeuser(openid, userinfo)
     if len(repostF) > 8:
         isvip = storeuserF(repostF, userinfo, openid)
-    # return JsonResponse({'cc': isvip})
-    return JsonResponse({'cc': 1})
+    return JsonResponse({'cc': isvip})
+    # return JsonResponse({'cc': 1})
 
 def getPostUsers(request):
     openid = request.GET['openid']
@@ -171,7 +174,7 @@ def getPostUsers(request):
     ans = []
     npcount = 0
     for item in res:
-        if npcount == 3:
+        if npcount == 8:
             break
         ans.append(json.loads(item['info']))
         npcount = npcount + 1
@@ -228,7 +231,7 @@ def payed(request):
                             content_type='text/xml', status=200)
 
 def descpay(request):
-    return JsonResponse({'data': '邀请五位好友登录试用'})
+    return JsonResponse({'data': '邀请 5 位好友登录试用'})
 
 def tableheader(request):
     return JsonResponse({'col1': '风险', 'col2': '专业', 'col3': '2017', 'col4': '2018(名次)', 'updatecol1': 1})
